@@ -17,13 +17,15 @@ const files = [
 module.exports.development = [
   ...files,
   '../../src/ui-scroll.js',
-  '../../src/ui-scroll-grid.js'
+  '../../src/ui-scroll-grid.js',
+  './init.js',
 ];
 
 module.exports.production = [
   ...files,
   '../../dist/ui-scroll.min.js',
   '../../dist/ui-scroll-grid.min.js',
+  './init.js',
   {
     pattern: '../../dist/*.js.map',
     included: false

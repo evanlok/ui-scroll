@@ -32,7 +32,10 @@ if (ENV === 'development') {
 
     output: {
       filename: '[name].js',
-      publicPath: '/'
+      publicPath: '/',
+      library: 'uiScroll',
+      libraryTarget: 'umd',
+      jsonpFunction: 'uiScrollJsonp'
     },
 
     rules: [
@@ -92,7 +95,10 @@ if (ENV === 'production') {
 
     output: {
       path: path.join(__dirname, 'dist'),
-      filename: '[name].js'
+      filename: '[name].js',
+      library: 'uiScroll',
+      libraryTarget: 'umd',
+      jsonpFunction: 'uiScrollJsonp'
     },
 
     rules: [],
