@@ -3,9 +3,12 @@ import ElementRoutines from './modules/elementRoutines.js';
 import ScrollBuffer from './modules/buffer.js';
 import Viewport from './modules/viewport.js';
 import Adapter from './modules/adapter.js';
+import {prefixedModuleName, prefixedName, setPrefix} from './prefix';
 
-export function uiScroll (prefix) {
-  angular.module(`${prefix}ui.scroll`, [])
+module.exports = function uiScroll (prefix) {
+  setPrefix(prefix);
+
+  angular.module(prefixedModuleName('ui.scroll'), [])
 
     .constant('JQLiteExtras', JQLiteExtras)
     .run(['JQLiteExtras', (JQLiteExtras) => {
@@ -13,7 +16,7 @@ export function uiScroll (prefix) {
       ElementRoutines.addCSSRules();
     }])
 
-    .directive(`${prefix}uiScrollViewport`, function () {
+    .directive(prefixedName('uiScrollViewport'), function () {
       return {
         restrict: 'A',
         controller: [
@@ -36,7 +39,7 @@ export function uiScroll (prefix) {
       };
     })
 
-    .directive(`${prefix}uiScroll`, [
+    .directive(prefixedName('uiScroll'), [
       '$log',
       '$injector',
       '$rootScope',
@@ -504,4 +507,4 @@ export function uiScroll (prefix) {
 
       }
     ]);
-}
+};

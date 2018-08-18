@@ -1,8 +1,6 @@
 'use strict';
 
 const path = require('path');
-const fs = require('fs');
-const glob = require('glob');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -26,18 +24,6 @@ let configEnv;
 
 if (ENV === 'development') {
   configEnv = {
-    entry: isTest ? ({
-      'test': glob.sync(path.resolve(__dirname, 'test/*.js'))
-    }) : ({}),
-
-    output: {
-      filename: '[name].js',
-      publicPath: '/',
-      library: 'uiScroll',
-      libraryTarget: 'umd',
-      jsonpFunction: 'uiScrollJsonp'
-    },
-
     rules: [
       isTest ? ({
         enforce: 'pre',
@@ -88,19 +74,6 @@ if (ENV === 'development') {
 
 if (ENV === 'production') {
   configEnv = {
-    entry: {
-      'ui-scroll.min': path.resolve(__dirname, 'src/ui-scroll.js'),
-      'ui-scroll-grid.min': path.resolve(__dirname, 'src/ui-scroll-grid.js')
-    },
-
-    output: {
-      path: path.join(__dirname, 'dist'),
-      filename: '[name].js',
-      library: 'uiScroll',
-      libraryTarget: 'umd',
-      jsonpFunction: 'uiScrollJsonp'
-    },
-
     rules: [],
 
     devtool: 'source-map',
@@ -132,40 +105,60 @@ if (ENV === 'production') {
   }
 }
 
-module.exports = {
-  entry: Object.assign({
-    'ui-scroll': path.resolve(__dirname, 'src/ui-scroll.js'),
-    'ui-scroll-grid': path.resolve(__dirname, 'src/ui-scroll-grid.js')
-  }, configEnv.entry),
+function buildConfig(entryName, entryPath, library) {
+  let entry = {}
+  entry[entryName] = entryPath
 
-  output: configEnv.output,
+  return {
+    entry,
+    output: {
+      path: path.join(__dirname, 'dist'),
+      filename: '[name].js',
+      library: library,
+      libraryTarget: 'umd'
+    },
 
-  cache: false,
+    cache: false,
 
-  devtool: configEnv.devtool,
+    devtool: configEnv.devtool,
 
-  module: {
-    rules: [...configEnv.rules,
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader'
-      },
-      {
-        enforce: 'pre',
-        test: /\.js$/,
-        exclude: /node_modules/,
-        include: path.resolve(__dirname, 'src'),
-        use: [{
-          loader: 'jshint-loader'
-        }]
-      }
-    ]
-  },
+    module: {
+      rules: [...configEnv.rules,
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader'
+        },
+        {
+          enforce: 'pre',
+          test: /\.js$/,
+          exclude: /node_modules/,
+          include: path.resolve(__dirname, 'src'),
+          use: [{
+            loader: 'jshint-loader'
+          }]
+        }
+      ]
+    },
 
-  plugins: configEnv.plugins,
+    plugins: configEnv.plugins,
 
-  devServer: configEnv.devServer,
+    devServer: configEnv.devServer,
 
-  watch: configEnv.watch
-};
+    watch: configEnv.watch
+  }
+}
+
+let configs = [
+  buildConfig('ui-scroll', path.resolve(__dirname, 'src/ui-scroll.js'), 'uiScroll'),
+  buildConfig('ui-scroll-grid', path.resolve(__dirname, 'src/ui-scroll-grid.js'), 'uiScrollGrid')
+];
+
+if (ENV === 'production') {
+  configs = configs.concat([
+    buildConfig('ui-scroll.min', path.resolve(__dirname, 'src/ui-scroll.js'), 'uiScroll'),
+    buildConfig('ui-scroll-grid.min', path.resolve(__dirname, 'src/ui-scroll-grid.js'), 'uiScrollGrid')
+  ])
+}
+
+module.exports = configs
