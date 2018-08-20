@@ -2,8 +2,9 @@ import {prefixedModuleName, prefixedName, setPrefix} from './prefix';
 
 module.exports = function uiScrollGrid (prefix) {
   setPrefix(prefix);
+  const moduleName = prefixedModuleName('ui.scroll.grid');
 
-  angular.module(prefixedModuleName('ui.scroll.grid'), [])
+  angular.module(moduleName, [])
     .directive(prefixedName('uiScrollTh'), ['$log', '$timeout', function (console, $timeout) {
 
       function GridAdapter (controller) {
@@ -270,4 +271,6 @@ module.exports = function uiScrollGrid (prefix) {
         }
       };
     });
+
+  return moduleName;
 };

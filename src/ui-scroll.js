@@ -7,8 +7,9 @@ import {prefixedModuleName, prefixedName, setPrefix} from './prefix';
 
 module.exports = function uiScroll (prefix) {
   setPrefix(prefix);
+  const moduleName = prefixedModuleName('ui.scroll');
 
-  angular.module(prefixedModuleName('ui.scroll'), [])
+  angular.module(moduleName, [])
 
     .constant('JQLiteExtras', JQLiteExtras)
     .run(['JQLiteExtras', (JQLiteExtras) => {
@@ -507,4 +508,6 @@ module.exports = function uiScroll (prefix) {
 
       }
     ]);
+
+  return moduleName;
 };

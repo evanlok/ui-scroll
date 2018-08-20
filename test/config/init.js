@@ -1,2 +1,7 @@
-window['uiScroll']('');
-window['uiScrollGrid']('');
+if (window['uiScroll']) {
+  window['uiScroll']('');
+}
+
+if (window['uiScrollGrid']) {
+  window['uiScrollGrid']('');
+}
